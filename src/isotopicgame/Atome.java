@@ -24,7 +24,9 @@ public class Atome {
         
     }
     
-    public 
+    public boolean isDisparu(){
+        return false;
+    }
     
     public int getTempsVie(){
         return 0;

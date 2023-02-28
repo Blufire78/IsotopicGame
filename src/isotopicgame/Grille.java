@@ -509,9 +509,9 @@ public class Grille {
                 if (grille[i][j] != null && grille[i][j].getAtomeType() == "Instable"){
                     grille[i][j].reduireTempsVie();
                     System.out.println("Il reste "+grille[i][j].getTempsVie()+" coups à l'atome en position x = "+i+" y = "+j);
-                    if (grille[i][j].getIsDisparu()){
-                        grille[i][j].reduireTempsVie();
-                        System.out.println("Il reste "+grille[i][j].getTempsVie()+" coups à l'atome en position x = "+i+" y = "+j);
+                    if (grille[i][j].isDisparu()){
+                        grille[i][j] = null;
+                        System.out.println("L'atome en position x = "+i+" y = "+j+ " a disparu");
                     }
                 }
                 

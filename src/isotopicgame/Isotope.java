@@ -19,7 +19,13 @@ public class Isotope extends Atome{
     public void reduireTempsVie(){
         this.tempsVie --;
     }
-
+    
+    public boolean isDisparu(){
+        if (tempsVie == 0){
+            return true;
+        }
+        return false;
+    }
     public int getTempsVie() {
         return tempsVie;
     }
