@@ -105,6 +105,7 @@ public class Grille {
         y = gen.nextInt(taille);
         
         //ATTENTION BOUCLE INFINIE SI LA GRILLE EST PLEINE
+        
         while(grille[x][y] != null){
             x = gen.nextInt( taille);
             y = gen.nextInt(taille);
@@ -122,7 +123,7 @@ public class Grille {
         A chaque fusion au dessus de Z = 8, l'atome a un pourcentage de chance de se tranformer en un atome instable
         On pose ce pourcentage à 30%
        */
-        int pourcentage_inst = 30, n; //Pourcentage de chance qu'un atome stable se tranforme en un atome instable
+        int pourcentage_inst = 100, n; //Pourcentage de chance qu'un atome stable se tranforme en un atome instable
         int tempsVie;
         Isotope newIsotope;
         for (x = 0; x < taille; x++){
@@ -130,8 +131,8 @@ public class Grille {
 
                 //Si il y a un atome
                 if(grille[x][y] != null){
-                    //Si l'atome a un numéro atomique >= 8, alors il a une chance de devenir instable
-                    if (grille[x][y].getNumMasse() >= 8){
+                    //Si l'atome a un numéro atomique >= 8 et qu'il est stable, alors il a une chance de devenir instable
+                    if (grille[x][y].getNumMasse() >= 8 && grille[x][y].getAtomeType() == "Stable"){
                         n = gen.nextInt(100) + 1;
                         //L'atome devient instable
                         if (n <= pourcentage_inst){
@@ -514,6 +515,7 @@ public class Grille {
                         System.out.println("L'atome en position x = "+i+" y = "+j+ " a disparu");
                     }
                 }
+                
                 
             } 
         }
