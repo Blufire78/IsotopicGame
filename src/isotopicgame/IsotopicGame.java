@@ -4,6 +4,8 @@
  */
 package isotopicgame;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -34,28 +36,41 @@ public class IsotopicGame {
     * 
      */
     
-        public static void main(String[] args) {
-        
-
+        public static void main(String[] args) throws IOException {
+            
+            //Récupération des différents fichiers
+            
+                //Fichier Joueurs
+            ArrayList<Joueur> joueurs = Joueur.depuisFichier();  //On récupère la liste des joueurs et leurs informations
+            
+            Scanner sc;
+            sc = new Scanner(System.in);
+            Joueur joueur;
+            System.out.println("Entrez votre pseudo: ");
+            String pseudo = sc.nextLine();
+            
+            if(Joueur.exist(pseudo, joueurs)){
+                joueur = Joueur.chercherJoueur(pseudo, joueurs);
+                joueur.changerObjectif(); //
+            }
+            else{
+                System.out.println("Quel est votre objectif de numéro atomique: ");
+                joueur = new Joueur(pseudo, sc.nextInt());
+            }
             
             System.out.println("création de la partie");
             System.out.println("Entrer la taille du tableau");
-            Scanner sc;
-            sc = new Scanner(System.in);
             int taille = sc.nextInt();
-            System.out.println("Entrer le numéro atomique à atteindre");
-            sc = new Scanner(System.in);
-            int objectif = sc.nextInt();
-            System.out.println("objectif = " + objectif);
+           
             
-            
-            Random gen = new Random();
+            //Random gen = new Random();
             
             
             // test random
             //int x = gen.nextInt(taille);
             //System.out.println(x);
-            
+            int objectif = joueur.getObjectif();
+
             Grille grille = new Grille(taille,objectif);
             grille.creation();  // j'arriva pas à actualiser la taille de la grille
             grille.afficher();
@@ -67,12 +82,11 @@ public class IsotopicGame {
                 grille.VerifWin();
                 
             }
+            
             // pour l'instant on dit qu'il gagne tout le temps
             System.out.println("Félicitation objectif atteint !!!");
-            
-            
-            
-            
+            joueur.versFichier(joueurs);
+                       
         }
         
     }
