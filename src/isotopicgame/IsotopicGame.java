@@ -33,6 +33,9 @@ public class IsotopicGame {
     * ajouter le fait que si la grille est pleine et on ne peut plus faire de coliision alors la parte est finie
     * 
      */
+    
+    
+    //BONJUR JULI1
     public static void main(String[] args) {
         
 
