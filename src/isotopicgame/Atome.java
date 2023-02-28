@@ -16,11 +16,15 @@ public class Atome {
         
     }
 
-    public int getnumMasse() {
+    public int getNumMasse() {
         return numMasse;
     }
 
-
+    public void reduireTempsVie(){
+        
+    }
     
-    
+    public String getAtomeType(){
+        return "Stable";
+    }
 }

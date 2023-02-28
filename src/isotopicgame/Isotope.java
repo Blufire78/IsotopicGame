@@ -9,14 +9,18 @@ package isotopicgame;
  * @author jvere
  */
 public class Isotope extends Atome{
-    private int tempsVie;
+    private int tempsVie; //Nombre de coups restants avant la disparition de l'atome
 
-    public Isotope(int tempsVie, int dateMort, int numMasse, int x, int y) {
+    public Isotope(int tempsVie, int numMasse) {
         super(numMasse);
         this.tempsVie = tempsVie;
     }
     
+    public void reduireTempsVie(){
+        this.tempsVie --;
+    }
     
-    
-    
+    public String getAtomeType(){
+        return "Instable";
+    }
 }

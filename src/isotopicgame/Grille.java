@@ -30,7 +30,7 @@ public class Grille {
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
                 if (grille[i][j] != null) {
-                    System.out.print("[" + grille[i][j].getnumMasse() + "]");
+                    System.out.print("[" + grille[i][j].getNumMasse() + "]");
 
                     // un atome est représenté par son nombre de masse
                 } else {
@@ -46,6 +46,8 @@ public class Grille {
 
     public void creation() {
         Random gen = new Random();
+        
+        //Génération d'atomes aléatoires
         Atome atome1 = new Atome(2);
         Atome atome2 = new Atome(4);
         Atome atome3 = new Atome(8);
@@ -58,8 +60,9 @@ public class Grille {
             grille[gen.nextInt(taille)][gen.nextInt(taille)] = atome1;
         }
         else if(a ==0){
-        grille[gen.nextInt(taille)][gen.nextInt(taille)] = atome2;   
+            grille[gen.nextInt(taille)][gen.nextInt(taille)] = atome2;   
         }
+        
         // coliision droite
         
 //        grille[0][2] = atome3;
@@ -92,6 +95,7 @@ public class Grille {
     public void terrain() {
         // génération aléatoire d'un atome de numMasse 2 ou 4
         Random gen = new Random();
+                
         Atome atome1 = new Atome(2);
         Atome atome2 = new Atome(4);
         int a;
@@ -100,6 +104,7 @@ public class Grille {
         x = gen.nextInt(taille);
         y = gen.nextInt(taille);
         
+        //ATTENTION BOUCLE INFINIE SI LA GRILLE EST PLEINE
         while(grille[x][y] != null){
             x = gen.nextInt( taille);
             y = gen.nextInt(taille);
@@ -112,14 +117,41 @@ public class Grille {
         grille[x][y] = atome2;   
         }    
         
-       
+       /*Gestion de la création d'atomes instables 
+       On considère qu'un atome peut-être instable à partir de Z = 8,
+        A chaque fusion au dessus de Z = 8, l'atome a un pourcentage de chance de se tranformer en un atome instable
+        On pose ce pourcentage à 30%
+       */
+        int pourcentage_inst = 30, n; //Pourcentage de chance qu'un atome stable se tranforme en un atome instable
+        int tempsVie;
+        Isotope newIsotope;
+        for (x = 0; x < taille; x++){
+            for (y = 0; y < taille; y ++){
+
+                //Si il y a un atome
+                if(grille[x][y] != null){
+                    //Si l'atome a un numéro atomique >= 8, alors il a une chance de devenir instable
+                    if (grille[x][y].getNumMasse() >= 8){
+                        n = gen.nextInt(100) + 1;
+                        //L'atome devient instable
+                        if (n <= pourcentage_inst){
+                            tempsVie = gen.nextInt(10) + 10; //Le temps de vie est d'au minimum 10 coups et au max 20
+                            newIsotope = new Isotope(tempsVie,grille[x][y].getNumMasse());
+                            grille[x][y] = newIsotope;
+                            System.out.println("l'atome en position x="+x+" y="+y+" est devenu instable");
+                        } 
+                    }
+                }
+           }
+           
+       }
     }
 
     public boolean VerifWin() {
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
                 if (grille[i][j] != null) {
-                    if (grille[i][j].getnumMasse() == objectif) {
+                    if (grille[i][j].getNumMasse() == objectif) {
                         return true;
                     }
                 }
@@ -420,7 +452,8 @@ public class Grille {
         sc = new Scanner(System.in);
         System.out.println("Mouvement Possible \n  haut : 1 \n  bas : 2 \n  droite : 3 \n  gauche : 4");
         int rep = sc.nextInt();
-
+        
+        //Gestion de l'orientation du mouvement 
         switch (rep) {
 
             case (1):
@@ -467,7 +500,18 @@ public class Grille {
 
             default:
                 System.out.println("choix non valide");
+        
+        }
 
+        //Gestion des atomes instables
+        for(int x = 0; x<taille-2; x++){
+            for(int y = 0; x<taille-2; y++){
+                System.out.println("x="+x+" y="+y);
+
+                if (grille[x][y] != null && grille[x][y].getAtomeType() == "Instable"){
+                    grille[x][y].reduireTempsVie();
+                }
+            } 
         }
     }
 
@@ -475,9 +519,9 @@ public class Grille {
         for (int i = 1; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
                 if (grille[i][j] != null & i > 0 & grille[i - 1][j] != null) {
-                    if (grille[i - 1][j].getnumMasse() == grille[i][j].getnumMasse()) {
+                    if (grille[i - 1][j].getNumMasse() == grille[i][j].getNumMasse()) {
                         int sommeMasse;
-                        sommeMasse = grille[i - 1][j].getnumMasse() * 2;
+                        sommeMasse = grille[i - 1][j].getNumMasse() * 2;
                         Atome tamp = new Atome(sommeMasse);
                         grille[i][j] = null;
                         grille[i - 1][j] = tamp;
@@ -494,9 +538,9 @@ public class Grille {
         for (int i = taille - 2; i >= 0; i--) {
             for (int j = 0; j < taille; j++) {
                 if (grille[i][j] != null & i < taille - 1 & grille[i + 1][j] != null) {
-                    if (grille[i + 1][j].getnumMasse() == grille[i][j].getnumMasse()) {
+                    if (grille[i + 1][j].getNumMasse() == grille[i][j].getNumMasse()) {
                         int sommeMasse;
-                        sommeMasse = grille[i + 1][j].getnumMasse() * 2;
+                        sommeMasse = grille[i + 1][j].getNumMasse() * 2;
                         Atome tamp = new Atome(sommeMasse);
                         grille[i][j] = null;
                         grille[i + 1][j] = tamp;
@@ -512,9 +556,9 @@ public class Grille {
         for (int i = 0; i < taille ; i++) {
             for (int j = taille - 2; j > 0; j--) {
                 if (grille[i][j] != null & j > 0 & grille[i][j + 1] != null) {
-                    if (grille[i][j + 1].getnumMasse() == grille[i][j].getnumMasse()) {
+                    if (grille[i][j + 1].getNumMasse() == grille[i][j].getNumMasse()) {
                         int sommeMasse;
-                        sommeMasse = grille[i][j + 1].getnumMasse() * 2;
+                        sommeMasse = grille[i][j + 1].getNumMasse() * 2;
                         Atome tamp = new Atome(sommeMasse);
                         grille[i][j] = null;
                         grille[i][j + 1] = tamp;
@@ -530,9 +574,9 @@ public class Grille {
         for (int i = 0; i < taille; i++) {
             for (int j = 1; j < taille - 1; j++) {
                 if (grille[i][j] != null & j > 0 & grille[i][j - 1] != null) {
-                    if (grille[i][j - 1].getnumMasse() == grille[i][j].getnumMasse()) {
+                    if (grille[i][j - 1].getNumMasse() == grille[i][j].getNumMasse()) {
                         int sommeMasse;
-                        sommeMasse = grille[i][j - 1].getnumMasse() * 2;
+                        sommeMasse = grille[i][j - 1].getNumMasse() * 2;
                         Atome tamp = new Atome(sommeMasse);
                         grille[i][j] = null;
                         grille[i][j - 1] = tamp;
