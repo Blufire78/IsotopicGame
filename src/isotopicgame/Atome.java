@@ -24,6 +24,12 @@ public class Atome {
         
     }
     
+    public 
+    
+    public int getTempsVie(){
+        return 0;
+    }
+    
     public String getAtomeType(){
         return "Stable";
     }

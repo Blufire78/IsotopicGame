@@ -19,6 +19,10 @@ public class Isotope extends Atome{
     public void reduireTempsVie(){
         this.tempsVie --;
     }
+
+    public int getTempsVie() {
+        return tempsVie;
+    }
     
     public String getAtomeType(){
         return "Instable";
