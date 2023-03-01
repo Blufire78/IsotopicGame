@@ -5,6 +5,10 @@
 package isotopicgame;
 
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -17,7 +21,8 @@ public class Grille {
     private int taille;
     private Atome[][] grille;
     private int objectif;
-
+    private static final String NOM_FICHIER_GRILLES = "Grilles.txt";
+    
     public Grille(int taille, int objectif) {
         this.taille = taille;
         this.objectif = objectif;
@@ -594,4 +599,50 @@ public class Grille {
 
     }
 
+    public String versFichier() throws IOException{
+        //Ajoute les joueurs et leurs informations dans le fichier Joueurs
+        String grillePourFichier = "";
+        for (int i = 0; i<taille; i++){
+            for (int j = 0; j<taille; j++){
+                if(grille[i][j] != null){
+                    if ("Instable".equals(grille[i][j].getAtomeType())){
+                        grillePourFichier += grille[i][j].getNumMasse()+"."+grille[i][j].getTempsVie();
+                    }
+                    else{
+                        grillePourFichier += grille[i][j].getNumMasse();
+                    }
+                    grillePourFichier += " ";
+                }
+                else{
+                   grillePourFichier += "N ";
+                }
+            }
+            grillePourFichier += "\n";
+        }
+        
+        
+        return grillePourFichier;
+    }
+    
+    public static ArrayList<Grille> depuisFichier() throws IOException{
+        ArrayList <Grille> grilles = new ArrayList<Grille>();
+        try{
+            FileReader fich = new FileReader(NOM_FICHIER_GRILLES);
+            BufferedReader br = new BufferedReader(fich);
+            String line = br.readLine();
+            String[] lineArray;
+            while (line != null){
+                lineArray = line.split(" ");
+                for (int i = 0; i<lineArray.length; i++){
+                    System.out.println("");
+                }
+            }
+            fich.close();
+        }
+        catch(Exception e){
+            System.out.println(e.toString());
+        }
+        return grilles;
+    }
+        
 }

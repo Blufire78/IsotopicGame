@@ -19,7 +19,8 @@ public class Atome {
     public int getNumMasse() {
         return numMasse;
     }
-
+    
+    
     public void reduireTempsVie(){
         
     }

@@ -58,6 +58,13 @@ public class IsotopicGame {
                 joueur = new Joueur(pseudo, sc.nextInt());
             }
             
+                //Fichier Grilles
+            ArrayList<Grille> grilles = Grille.depuisFichier();  //On récupère la liste des joueurs et leurs informations
+
+            
+            
+            int objectif = joueur.getObjectif();
+
             System.out.println("création de la partie");
             System.out.println("Entrer la taille du tableau");
             int taille = sc.nextInt();
@@ -69,12 +76,12 @@ public class IsotopicGame {
             // test random
             //int x = gen.nextInt(taille);
             //System.out.println(x);
-            int objectif = joueur.getObjectif();
 
             Grille grille = new Grille(taille,objectif);
             grille.creation();  // j'arriva pas à actualiser la taille de la grille
             grille.afficher();
             
+            System.out.println(grille.versFichier());
             while( grille.VerifWin() != true){
                 grille.mouvement();
                 grille.terrain();
