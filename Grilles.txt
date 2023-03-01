@@ -1,0 +1,16 @@
+4 N 2 
+N N 4 
+N 2 N 
+;
+4 N 8.12 
+2 N N 
+N N N 
+;
+4 N 2 
+N 2 N 
+N N N 
+;
+4 8.15 4 
+N N N 
+N N N 
+;

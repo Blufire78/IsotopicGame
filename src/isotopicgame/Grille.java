@@ -7,6 +7,7 @@ package isotopicgame;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -20,16 +21,33 @@ public class Grille {
 
     private int taille;
     private Atome[][] grille;
-    private int objectif;
     private static final String NOM_FICHIER_GRILLES = "Grilles.txt";
     
-    public Grille(int taille, int objectif) {
+    public Grille(int taille) {
         this.taille = taille;
-        this.objectif = objectif;
-        grille = new Atome[taille][taille];
+        this.grille = new Atome[taille][taille];
 
     }
+    
+    public Grille(Atome[][] grille) {
+        this.taille = grille.length;
+        this.grille = grille;
 
+    }
+    
+    public Grille(ArrayList<ArrayList<Atome>> grilleArray){
+        this.taille = grilleArray.size();
+        this.grille = new Atome[taille][taille];  
+        for (int i = 0; i < taille; i++){
+            for (int j = 0; j < taille; j++){
+                //Si le numéro atomique de l'atome n'est pas 0 alors il s'agit de l'atome en question
+                if (grilleArray.get(i).get(j).getNumMasse() != 0){
+                    this.grille[i][j] = grilleArray.get(i).get(j);
+                } 
+            }
+        }
+    }
+    
     public void afficher() {
 
         for (int i = 0; i < taille; i++) {
@@ -153,7 +171,7 @@ public class Grille {
        }
     }
 
-    public boolean VerifWin() {
+    public boolean VerifWin(int objectif) {
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
                 if (grille[i][j] != null) {
@@ -600,7 +618,7 @@ public class Grille {
     }
 
     public String versFichier() throws IOException{
-        //Ajoute les joueurs et leurs informations dans le fichier Joueurs
+        //Retourne les informations d'une grille à ajouter dans le fichier Grilles
         String grillePourFichier = "";
         for (int i = 0; i<taille; i++){
             for (int j = 0; j<taille; j++){
@@ -624,25 +642,75 @@ public class Grille {
         return grillePourFichier;
     }
     
+     public void versFichier(ArrayList<Grille> grilles) throws IOException{
+        //Ajoute les joueurs et leurs informations dans le fichier Joueurs
+
+        FileWriter fich = new FileWriter(NOM_FICHIER_GRILLES); //Créer ou ouvre un fichier en mode écriture (si le fichier existe, le supprime et en créer un nouveau)
+        for (Grille grille : grilles) {
+            String ch = grille.versFichier();
+            fich.write(ch);   //Ecris dans le fichier
+            fich.write(";");  //Ligne séparant deux grilles
+            fich.write("\n");
+        }
+        fich.close();
+    }
+     
     public static ArrayList<Grille> depuisFichier() throws IOException{
-        ArrayList <Grille> grilles = new ArrayList<Grille>();
-        try{
+        ArrayList <Grille> grilles = new ArrayList<Grille>();  //Liste qui stocke toute les grilles
+        ArrayList<ArrayList<Atome>> grille =  new ArrayList<>(); //Grille récupérée à un instant t
+        Grille grilleGrille;
+        ArrayList<Atome> ligneGrille = new ArrayList<Atome>();
+        Atome atome;  
+        //try{
             FileReader fich = new FileReader(NOM_FICHIER_GRILLES);
             BufferedReader br = new BufferedReader(fich);
             String line = br.readLine();
             String[] lineArray;
             while (line != null){
-                lineArray = line.split(" ");
-                for (int i = 0; i<lineArray.length; i++){
-                    System.out.println("");
+                //Si on a pas atteint la fin de la grille
+                if (line.equals(";") == false){
+                    lineArray = line.split(" ");
+                    for (int i = 0; i<lineArray.length; i++){
+                        //Si la case n'est pas vide
+                        if (lineArray[i].equals("N") == false){
+                            //Si la case contient un '.' alors on est en présence d'un atome instable
+                            if(lineArray[i].contains(".")){
+                                atome = new Isotope(Integer.parseInt(lineArray[i].substring(lineArray[i].indexOf(".") + 1)),Integer.parseInt(lineArray[i].substring(0,lineArray[i].indexOf("."))));
+                                ligneGrille.add(atome);
+                            }
+
+                            //Sinon l'atome est stable
+                            else{
+                                atome = new Atome(Integer.parseInt(lineArray[i]));
+                                ligneGrille.add(atome);
+                            }
+                        } 
+                        //Si la case est vide alors il n'y a pas d'atome
+                        else{
+                            ligneGrille.add(new Atome(0));
+                        }
+                    }
+                    grille.add(ligneGrille); //On ajoute la ligne actuelle à la grille actuelle
+                    ligneGrille = new ArrayList<Atome>(); //On réinitialise la ligne
                 }
+                
+                //Si on a atteint la fin de la grille
+                else{
+                   //On transforme la grille qui est une ArrayList en une grille Grille
+                   grilleGrille = new Grille(grille);
+                   grilles.add(grilleGrille);
+                   grille = new ArrayList<>();
+                }
+                
+                line = br.readLine();
             }
             fich.close();
-        }
+        /*}
         catch(Exception e){
             System.out.println(e.toString());
         }
+*/
         return grilles;
     }
-        
+    
 }

@@ -69,6 +69,7 @@ public class Joueur {
     public static boolean exist(String pseudo, ArrayList <Joueur> joueurs){
         //Vérifie si le joueur est existant ou non
         pseudo = pseudo.toLowerCase(); //On met le pseudo entré par l'utilisateur en minuscule pour le comparer aux autres et éviter les majuscules 
+        System.out.println(pseudo);
         for (Joueur joueur: joueurs){
             if (joueur.getPseudo().toLowerCase().equals(pseudo)){
                 return true;
@@ -78,6 +79,8 @@ public class Joueur {
     }
     
     public void versFichier(ArrayList<Joueur> joueurs) throws IOException{
+        //Ajoute les joueurs et leurs informations dans le fichier Joueurs
+
         FileWriter fich = new FileWriter(NOM_FICHIER_JOUEURS); //Créer ou ouvre un fichier en mode écriture (si le fichier existe, le supprime et en créer un nouveau)
         for (Joueur joueur : joueurs) {
             String ch = joueur.versFichier();
@@ -87,8 +90,8 @@ public class Joueur {
     }
         
     public String versFichier() throws IOException{
-        //Ajoute les joueurs et leurs informations dans le fichier Joueurs
-        return this.pseudo + ";" + this.score + ";" + this.objectif + ";" + this.timer;
+        //Retourne les informations d'un joueur à ajouter dans le fichier Joueurs
+        return this.pseudo + ";" + this.score + ";" + this.objectif + ";" + this.timer + System.lineSeparator();
     }
     public static ArrayList<Joueur> depuisFichier() throws FileNotFoundException, IOException{
         ArrayList <Joueur> joueurs = new ArrayList<Joueur>();
@@ -100,6 +103,7 @@ public class Joueur {
             while (line != null){
                 lineArray = line.split(";");
                 joueurs.add(new Joueur(lineArray[0], Integer.parseInt(lineArray[2]), Integer.parseInt(lineArray[1]), Integer.parseInt(lineArray[3])));            
+                line = br.readLine();
             }
             fich.close();
         }
