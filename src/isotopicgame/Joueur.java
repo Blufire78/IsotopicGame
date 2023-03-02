@@ -21,22 +21,26 @@ public class Joueur {
     private String pseudo;
     private int score,objectif, timer;
     private static final String NOM_FICHIER_JOUEURS = "Joueurs.txt";
+    private Grille grille; //Grille relative au joueur
     
     /* Constructeurs
     ----------------------------------------------------------------------
     */
-    public Joueur(String pseudo, int objectif) {
+    public Joueur(String pseudo, int objectif, Grille grille) {
         this.pseudo = pseudo;
         this.score = 0;
         this.objectif = objectif;
         this.timer = 0;
+        this.grille = grille;
+        this.grille.creation();
     }
 
-    public Joueur(String pseudo, int objectif, int score, int timer) {
+    public Joueur(String pseudo, int objectif, int score, int timer, Grille grille) {
         this.pseudo = pseudo;
         this.score = score;
         this.objectif = objectif;
         this.timer = timer;
+        this.grille = grille;
     }
     /*
     ----------------------------------------------------------------------
@@ -58,13 +62,38 @@ public class Joueur {
     public int getObjectif() {
         return objectif;
     }
+
+    public Grille getGrille() {
+        return grille;
+    }
     
     
     /*
     ----------------------------------------------------------------------
     */
     
+    public String jouerTour(){
+        //Fonction qui sert à jouer un tour
+        String retour = this.grille.mouvement();
+        this.grille.terrain();
+        return retour;
+    }
     
+    public boolean VerifWin() {
+        for (int i = 0; i < this.grille.getTaille(); i++) {
+            for (int j = 0; j < this.grille.getTaille(); j++) {
+                if (this.grille.getGrille()[i][j] != null) {
+                    if (this.grille.getGrille()[i][j].getNumMasse() == this.objectif) {
+                        return true;
+                    }
+                }
+
+            }
+        }
+
+        return false;
+
+    }
     
     public static boolean exist(String pseudo, ArrayList <Joueur> joueurs){
         //Vérifie si le joueur est existant ou non
@@ -102,7 +131,7 @@ public class Joueur {
             String[] lineArray;
             while (line != null){
                 lineArray = line.split(";");
-                joueurs.add(new Joueur(lineArray[0], Integer.parseInt(lineArray[2]), Integer.parseInt(lineArray[1]), Integer.parseInt(lineArray[3])));            
+                joueurs.add(new Joueur(lineArray[0], Integer.parseInt(lineArray[2]), Integer.parseInt(lineArray[1]), Integer.parseInt(lineArray[3]), Grille.depuisFichier().get(0)));            
                 line = br.readLine();
             }
             fich.close();
@@ -115,7 +144,7 @@ public class Joueur {
     
     public static Joueur chercherJoueur(String pseudo, ArrayList <Joueur> joueurs){
         pseudo = pseudo.toLowerCase(); //On met le pseudo entré par l'utilisateur en minuscule pour le comparer aux autres et éviter les majuscules 
-        Joueur joueurRetourne = new Joueur("",0); //On initialise faussement le joueur à retourner
+        Joueur joueurRetourne = new Joueur("",0, new Grille(1)); //On initialise faussement le joueur à retourner
         for (Joueur joueur: joueurs){
             if (joueur.getPseudo().toLowerCase().equals(pseudo)){
                 joueurRetourne = joueur;
@@ -156,6 +185,8 @@ public class Joueur {
             
         }
     }
+    
+    
     
     
 }

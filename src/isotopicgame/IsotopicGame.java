@@ -46,6 +46,7 @@ public class IsotopicGame {
             Scanner sc;
             sc = new Scanner(System.in);
             Joueur joueur;
+            int objectif;
             System.out.println("Entrez votre pseudo: ");
             String pseudo = sc.nextLine();
             if(Joueur.exist(pseudo, joueurs)){
@@ -53,21 +54,25 @@ public class IsotopicGame {
                 joueur.changerObjectif(); //
             }
             else{
+                //On vérifie que l'objectif est bien un multiple de 2
                 System.out.println("Quel est votre objectif de numéro atomique: ");
-                joueur = new Joueur(pseudo, sc.nextInt());
+                objectif = sc.nextInt();
+                while(objectif %2 != 0){
+                    System.out.println("Veuillez rentrer un nombre pair: ");
+                    objectif = sc.nextInt();
+                }
+                System.out.println("création de la partie");
+                System.out.println("Entrer la taille du tableau");
+                int taille = sc.nextInt();
+                joueur = new Joueur(pseudo, objectif, new Grille(taille));
+
             }
             
                 //Fichier Grilles
             ArrayList<Grille> grilles = Grille.depuisFichier();  //On récupère la liste des joueurs et leurs informations
 
-            
-            
-            int objectif = joueur.getObjectif();
-
-            System.out.println("création de la partie");
-            System.out.println("Entrer la taille du tableau");
-            int taille = sc.nextInt();
            
+            
             
             //Random gen = new Random();
             
@@ -75,29 +80,41 @@ public class IsotopicGame {
             // test random
             //int x = gen.nextInt(taille);
             //System.out.println(x);
+            objectif = joueur.getObjectif();
 
-            Grille grille = new Grille(taille);
-            grille.creation();  // j'arriva pas à actualiser la taille de la grille
-            grille.afficher();
             
-            System.out.println(grille.versFichier());
+            
+            joueur.getGrille().afficher();
+            
             int testFichiers = 3;
-            while( grille.VerifWin(objectif) != true && testFichiers > 0){
-                grille.mouvement();
-                grille.terrain();
-                grille.afficher();
+            String window = "";
+            Menu menu = new Menu();
+            while(joueur.VerifWin() != true && testFichiers > 0){
+                
                 
                 testFichiers --;
                 
+                //Si le joueur a choisi d'entrer dans le menu
+                if (window.equals("MENU")){
+                    if(menu.getWindow().equals("PRINCIPAL")){
+                        menu.options();
+                    }
+                   
+                }
+                
+                else{
+                    window = joueur.jouerTour();
+                    joueur.getGrille().afficher();
+                }
             }
             
             // pour l'instant on dit qu'il gagne tout le temps
             System.out.println("Félicitation objectif atteint !!!");
             
             joueurs.add(joueur);
-            grilles.add(grille);
+            grilles.add(joueur.getGrille());
             joueur.versFichier(joueurs);
-            grille.versFichier(grilles);
+            joueur.getGrille().versFichier(grilles);
                        
         }
         

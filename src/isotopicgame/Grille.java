@@ -47,6 +47,15 @@ public class Grille {
             }
         }
     }
+
+    public int getTaille() {
+        return taille;
+    }
+
+    public Atome[][] getGrille() {
+        return grille;
+    }
+    
     
     public void afficher() {
 
@@ -171,21 +180,7 @@ public class Grille {
        }
     }
 
-    public boolean VerifWin(int objectif) {
-        for (int i = 0; i < taille; i++) {
-            for (int j = 0; j < taille; j++) {
-                if (grille[i][j] != null) {
-                    if (grille[i][j].getNumMasse() == objectif) {
-                        return true;
-                    }
-                }
-
-            }
-        }
-
-        return false;
-
-    }
+    
 
     public void déplacementHaut() {
         // le sens de parcour de la grille et opposé à celui du mouvement des atomes pour éviter qu'il se bloque entre eux
@@ -471,10 +466,10 @@ public class Grille {
 
     }
 
-    public void mouvement() {
+    public String mouvement() {
         Scanner sc;
         sc = new Scanner(System.in);
-        System.out.println("Mouvement Possible \n  haut : 1 \n  bas : 2 \n  droite : 3 \n  gauche : 4");
+        System.out.println("Mouvement Possible \n  haut : 1 \n  bas : 2 \n  droite : 3 \n  gauche : 4 \n 5. menu");
         int rep = sc.nextInt();
         
         //Gestion de l'orientation du mouvement 
@@ -521,9 +516,13 @@ public class Grille {
                 déplacementGauche();
                 System.out.println("grille après le re déplacement gauche :");
                 break;
-
+            
+            case(5):
+                return "MENU";
+                
             default:
                 System.out.println("choix non valide");
+        
         
         }
 
@@ -542,6 +541,8 @@ public class Grille {
                 
             } 
         }
+        
+        return "";
     }
 
     public void collisionHaut() {
